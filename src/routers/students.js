@@ -3,6 +3,7 @@ import express from 'express';
 
 import {
   createStudentController,
+  deleteStudentController,
   getAllStudentsController,
   getStudentByIdController,
   updateStudentsController,
@@ -17,5 +18,6 @@ router.get('/', ctrlWrapper(getAllStudentsController));
 router.get('/:studentId', ctrlWrapper(getStudentByIdController));
 router.post('/', jsonParser, ctrlWrapper(createStudentController));
 router.patch('/:studentId', jsonParser, ctrlWrapper(updateStudentsController));
+router.delete('/:studentId', ctrlWrapper(deleteStudentController));
 
 export default router;

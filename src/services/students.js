@@ -23,3 +23,8 @@ export const updateStudent = async (studentId, payload) => {
   );
   return student;
 };
+
+export const deleteStudent = async (studentId) => {
+  const student = await StudentsCollection.findByIdAndDelete(studentId);
+  return student;
+};
