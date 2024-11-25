@@ -10,7 +10,16 @@ export const getStudentById = async (studentId) => {
   return student;
 };
 
-export const createStudent = async (body) => {
-  const student = await StudentsCollection.create(body);
+export const createStudent = async (payload) => {
+  const student = await StudentsCollection.create(payload);
+  return student;
+};
+
+export const updateStudent = async (studentId, payload) => {
+  const student = await StudentsCollection.findByIdAndUpdate(
+    studentId,
+    payload,
+    { new: true },
+  );
   return student;
 };

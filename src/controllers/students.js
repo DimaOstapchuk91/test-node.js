@@ -3,6 +3,7 @@ import {
   createStudent,
   getAllStudents,
   getStudentById,
+  updateStudent,
 } from '../services/students.js';
 
 export const getAllStudentsController = async (req, res) => {
@@ -43,6 +44,24 @@ export const createStudentController = async (req, res) => {
   res.status(201).json({
     status: 201,
     message: 'Student successfully created',
+    data: student,
+  });
+};
+
+export const updateStudentsController = async (req, res) => {
+  const { studentId } = req.params;
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    throw createHttpError(400, 'Request body is missing');
+  }
+
+  const student = await updateStudent(studentId, req.body);
+
+  if (!student) throw createHttpError(404, 'Student Not Found');
+
+  res.status(200).json({
+    status: 201,
+    message: 'Student successfully changed',
     data: student,
   });
 };
