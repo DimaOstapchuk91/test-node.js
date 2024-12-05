@@ -22,12 +22,14 @@ const router = Router();
 
 router.get('/', ctrlWrapper(getAllStudentsController));
 router.get('/:studentId', isValidId, ctrlWrapper(getStudentByIdController));
+
 router.post(
   '/',
   validateBody(createStudentSchema),
   jsonParser,
   ctrlWrapper(createStudentController),
 );
+
 router.patch(
   '/:studentId',
   isValidId,
