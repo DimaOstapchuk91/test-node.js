@@ -7,10 +7,10 @@ import { SessionsCollection } from '../db/models/session.js';
 import { FIFTEN_MINUTES, ONE_DAY } from '../constants/index.js';
 
 export const registerUser = async (payload) => {
+  console.log('ath servises');
   const user = await UsersCollection.findOne({ email: payload.email });
 
   if (user) throw createHttpError(409, 'Email in use');
-
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   return await UsersCollection.create({
@@ -20,24 +20,27 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
+  // console.log(payload);
   const user = await UsersCollection.findOne({ email: payload.email });
+  // console.log(user);
 
   if (!user) throw createHttpError(404, 'User not found');
 
-  const isEqual = await bcrypt.compare(payload.password, user.pasword);
+  const isEqual = await bcrypt.compare(payload.password, user.password);
 
   if (!isEqual) throw createHttpError(401, 'Unauthorized');
 
   await SessionsCollection.deleteOne({ userId: user._id });
 
-  const accesToken = randomBytes(30).toString('base64');
+  const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
+  console.log(user._id);
   return await SessionsCollection.create({
     userId: user._id,
-    accesToken,
+    accessToken,
     refreshToken,
-    accesTokenValidUntil: new Date(Date.now() + FIFTEN_MINUTES),
+    accessTokenValidUntil: new Date(Date.now() + FIFTEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   });
 };
@@ -47,13 +50,13 @@ export const logoutUser = async (sessionId) => {
 };
 
 const createSession = () => {
-  const accesToken = randomBytes(30).toString('base64');
+  const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
   return {
-    accesToken,
+    accessToken,
     refreshToken,
-    accesTokenValidUntil: new Date(Date.now() + FIFTEN_MINUTES),
+    accessTokenValidUntil: new Date(Date.now() + FIFTEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   };
 };
